@@ -7,150 +7,100 @@
 
 import UIKit
 
-class ViewController: UIViewController, UITextFieldDelegate {
+class ViewController: UIViewController {
     
-    lazy var signUpLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = UIColor(red: 130/255, green: 131/255, blue: 134/255, alpha: 1)
-        label.font = .systemFont(ofSize: 52, weight: .regular)
-        label.text = "Sign Up"
+    var imageBoardName: String
+    var titleBoard: String
+    var subtitleBoard: String
+    
+    
+    init(imageBoardName: String, titleBoard: String, subtitleBoard: String) {
+        self.imageBoardName = imageBoardName
+        self.titleBoard = titleBoard
+        self.subtitleBoard = subtitleBoard
+        super.init(nibName: nil, bundle: nil)
         
-        return label
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+    }
+
+    lazy var onboardingImage: UIImageView = {
+        let imageName = imageBoardName
+        let image = UIImage(named: imageName)
+        let imageView = UIImageView(image: image!)
+        
+        return imageView
     }()
     
-    lazy var emailLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = UIColor(red: 130/255, green: 131/255, blue: 134/255, alpha: 1)
-        label.font = .systemFont(ofSize: 17, weight: .medium)
-        label.text = "Email"
+    lazy var onboardingTitle: UILabel = {
+        let title = UILabel()
+        title.translatesAutoresizingMaskIntoConstraints = false
+        title.text = titleBoard
+        title.textAlignment = .center
+        title.font = UIFont(name: "CircularStd-Bold", size: 24)
+        title.textColor = .black
         
-        return label
+        return title
     }()
     
-    lazy var emailTextField: UITextField = {
-        let textField = UITextField()
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.borderStyle = .roundedRect
-        textField.textContentType = .emailAddress
-        textField.keyboardType = .emailAddress
-        textField.autocapitalizationType = .none
-        textField.placeholder = "Masukkan email"
+    lazy var onboardingSubtitle: UILabel = {
+        let title = UILabel()
+        title.translatesAutoresizingMaskIntoConstraints = false
+        title.text = subtitleBoard
+        title.textAlignment = .center
+        title.font = UIFont(name: "CircularStd-Book", size: 16)
+        title.textColor = .gray
+        title.numberOfLines = 0
         
-        return textField
+        return title
     }()
     
-    lazy var passwordLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = UIColor(red: 130/255, green: 131/255, blue: 134/255, alpha: 1)
-        label.font = .systemFont(ofSize: 17, weight: .medium)
-        label.text = "Password"
+    lazy var textStack: UIStackView = {
+        let textStackView = UIStackView(arrangedSubviews: [onboardingTitle, onboardingSubtitle])
+        textStackView.translatesAutoresizingMaskIntoConstraints = false
+        textStackView.alignment = .center
+        textStackView.axis = .vertical
+        textStackView.spacing = 12
+        textStackView.distribution = .fill
         
-        return label
+        return textStackView
     }()
     
-    lazy var passwordTextField: UITextField = {
-        let textField = UITextField()
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.borderStyle = .roundedRect
-        textField.textContentType = .emailAddress
-        textField.keyboardType = .emailAddress
-        textField.autocapitalizationType = .none
-        textField.placeholder = "Masukkan password"
-        textField.isSecureTextEntry = true
+    lazy var topStack: UIStackView = {
+        let topStackView  = UIStackView(arrangedSubviews: [onboardingImage, textStack])
+        topStackView.translatesAutoresizingMaskIntoConstraints = false
+        topStackView.alignment = .center
+        topStackView.axis = .vertical
+        topStackView.spacing = 40
+        topStackView.distribution = .fill
         
-        return textField
+        return topStackView
     }()
     
-    lazy var submitButton: UIButton = {
-        let btn = UIButton()
-        btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.setTitle("Masuk", for: .normal)
-        btn.setTitleColor(UIColor(red: 130/255, green: 131/255, blue: 134/255, alpha: 1), for: .normal)
-        btn.backgroundColor = .white
-        btn.layer.borderWidth = 1
-        btn.layer.borderColor = CGColor(red: 130/255, green: 131/255, blue: 134/255, alpha: 1)
-        btn.layer.cornerRadius = 10
-        
-        return btn
-    }()
-    
-    lazy var emailStackView: UIStackView = {
-        let emailStackView = UIStackView(arrangedSubviews: [emailLabel, emailTextField])
-        emailStackView.translatesAutoresizingMaskIntoConstraints = false
-        emailStackView.axis = .vertical
-        emailStackView.distribution = .equalCentering
-        emailStackView.spacing = 4
-        
-        return emailStackView
-    }()
     
     override func loadView() {
         super.loadView()
         
         view.backgroundColor = .white
-        view.addSubview(signUpLabel)
-        view.addSubview(emailStackView)
         
-        signUpLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 130).isActive = true
-        signUpLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
+        view.addSubview(topStack)
         
-        emailStackView.topAnchor.constraint(equalTo: signUpLabel.bottomAnchor, constant: 40).isActive = true
-        emailStackView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
-        emailStackView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20).isActive = true
+        topStack.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 0).isActive = true
+        topStack.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
+        topStack.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20).isActive = true
         
-        //        view.addSubview(emailLabel)
-        //        view.addSubview(emailTextField)
-        //        view.addSubview(passwordLabel)
-        //        view.addSubview(passwordTextField)
-        //        view.addSubview(submitButton)
-        //
-        
-        //
-        //        emailLabel.topAnchor.constraint(equalTo: signUpLabel.bottomAnchor, constant: 40).isActive = true
-        //        emailLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
-        //
-        //        emailTextField.topAnchor.constraint(equalTo: emailLabel.bottomAnchor, constant: 4).isActive = true
-        //        emailTextField.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
-        //        emailTextField.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20).isActive = true
-        //        emailTextField.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        //
-        //        passwordLabel.topAnchor.constraint(equalTo: emailTextField.bottomAnchor, constant: 20).isActive = true
-        //        passwordLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
-        //
-        //        passwordTextField.topAnchor.constraint(equalTo: passwordLabel.bottomAnchor, constant: 4).isActive = true
-        //        passwordTextField.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
-        //        passwordTextField.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20).isActive = true
-        //        passwordTextField.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        //
-        //        submitButton.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 40).isActive = true
-        //        submitButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
-        //        submitButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20).isActive = true
-        //        submitButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
     
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if let value = textField.text {
-            print(value)
-        }
-        return true
-    }
     
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        emailTextField.delegate = self
-        passwordTextField.delegate = self
-        submitButton.addTarget(self, action: #selector(onSubmit), for: .touchUpInside)
     }
     
-    @objc func onSubmit() {
-        print("Awea")
-    }
     
     
 }
